@@ -18,20 +18,24 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
 
     // Validaciones
     if (formData.password !== formData.confirmPassword) {
       setError('Las contraseñas no coinciden');
+      setIsLoading(false);
       return;
     }
 
     if (!formData.acceptTerms) {
       setError('Debes aceptar los términos y condiciones');
+      setIsLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
       setError('La contraseña debe tener al menos 6 caracteres');
+      setIsLoading(false);
       return;
     }
 
@@ -41,6 +45,7 @@ export default function Register() {
     // Verificar si el usuario ya existe
     if (users.some((u: any) => u.email === formData.email)) {
       setError('Este correo ya está registrado');
+      setIsLoading(false);
       return;
     }
 
@@ -97,7 +102,7 @@ export default function Register() {
             <input
               type="email"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
             />
@@ -110,7 +115,7 @@ export default function Register() {
             <input
               type="password"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
               value={formData.password}
               onChange={(e) => setFormData({...formData, password: e.target.value})}
             />
@@ -123,7 +128,7 @@ export default function Register() {
             <input
               type="password"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
             />
@@ -139,7 +144,7 @@ export default function Register() {
             />
             <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
               Acepto los{' '}
-              <Link href="/terminos" className="text-indigo-600 hover:text-indigo-800 underline">
+              <Link href="/privacidad" className="text-indigo-600 hover:text-indigo-800 underline">
                 términos y condiciones
               </Link>
             </label>
@@ -147,9 +152,10 @@ export default function Register() {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-medium"
+            disabled={isLoading}
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-medium disabled:bg-indigo-400 disabled:cursor-not-allowed"
           >
-            Registrarse
+            {isLoading ? 'Registrando y enviando correo...' : 'Registrarse'}
           </button>
         </form>
 
